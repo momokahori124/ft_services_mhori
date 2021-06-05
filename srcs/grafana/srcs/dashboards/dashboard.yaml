@@ -1,0 +1,11 @@
+apiVersion: 1
+
+providers:
+- name: 'provider'
+  orgId: 1
+  folder: ''
+  folderUid: ''
+  type: file
+  options:
+    path: /etc/grafana/conf/provisioning/dashboards
+    foldersFromFilesStructure: true

@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ftps
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: ftps
+  template:
+    metadata:
+      labels:
+        component: ftps
+    spec:
+      containers:
+      - name: ftps
+        image: mhori/ftps:000
+        imagePullPolicy: Never
+        livenessProbe:
+          exec:
+            command: ["/healthcheck.sh"]
+          initialDelaySeconds: 60
+          periodSeconds: 5
+          timeoutSeconds: 10
+        ports:
+        - name: ftps
+          containerPort: 21
+        - name: passive-0
+          containerPort: 21000
+        - name: passive-1
+          containerPort: 21001
+        - name: passive-2
+          containerPort: 21002
+        - name: passive-3
+          containerPort: 21003
+        - name: passive-4
+          containerPort: 21004
+        - name: passive-5
+          containerPort: 21005
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ftps
+  annotations:
+    metallb.universe.tf/allow-shared-ip: ft_services
+spec:
+  type: LoadBalancer
+  selector:
+    component: ftps
+  ports:
+  - name: ftps
+    port: 21
+  - name: passive-0
+    port: 21000
+  - name: passive-1
+    port: 21001
+  - name: passive-2
+    port: 21002
+  - name: passive-3
+    port: 21003
+  - name: passive-4
+    port: 21004
+  - name: passive-5
+    port: 21005
